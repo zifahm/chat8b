@@ -14,10 +14,10 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
+import gestaltStyle from "gestalt/dist/gestalt.css";
 
 import isbot from "isbot";
 import { promiseHash } from "remix-utils";
-import stylesheet from "~/tailwind.css";
 import type { Message } from "./models/message.server";
 import {
   createMessage,
@@ -25,26 +25,32 @@ import {
   getMessageCount,
 } from "./models/message.server";
 import type { User } from "./models/user.server";
-import { createUser, currentOnline, getUserCount } from "./models/user.server";
+import {
+  createUser,
+  currentOnline,
+  getChatViewCount,
+  getUserCount,
+} from "./models/user.server";
 import {
   createUserSessionCookieHeader,
   getUser,
 } from "./services/session.server";
 
 export const links: LinksFunction = () => [
-  { rel: "stylesheet", href: stylesheet },
+  { rel: "stylesheet", href: gestaltStyle },
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
 ];
 
 const DEFAULT_MARKETING_IMAGE =
-  "https://res.cloudinary.com/bespoke-cloudinary/image/upload/v1685976527/Group_8_jfkrbh.jpg";
-const description = "A conversation with 8 Billion people";
+  "https://res.cloudinary.com/bespoke-cloudinary/image/upload/f_auto/v1686076084/Group_8_1_xvs0ko.jpg";
+const description =
+  "Ask Chat-GPT questions or advice to humans. Share to reach all 8 billion of us.";
 
 export const meta: V2_MetaFunction = () => {
   return [
     { title: `Chat-8B | ${description}` },
     { description },
-    { property: "og:url", content: "https://chat8b.fly.dev" },
+    { property: "og:url", content: "https://chat8b.online" },
     { property: "og:title", content: "Chat-8B" },
     { property: "og:site_name", content: "Chat-8B" },
     { property: "og:type", content: "website" },
@@ -67,7 +73,7 @@ export const meta: V2_MetaFunction = () => {
     },
     {
       property: "twitter:card",
-      content: "summary",
+      content: "summary_large_image",
     },
     {
       property: "twitter:title",
@@ -90,6 +96,7 @@ export interface RootData {
   userCount?: number | null | undefined;
   onlineCount?: number | null | undefined;
   messageCount?: number | null | undefined;
+  chatViewCount?: number | null | undefined;
 }
 
 export const loader = async ({ request }: LoaderArgs) => {
@@ -114,6 +121,7 @@ export const loader = async ({ request }: LoaderArgs) => {
         userCount: getUserCount(),
         onlineCount: currentOnline(),
         messageCount: getMessageCount(),
+        chatViewCount: getChatViewCount(),
       })),
     },
     setcookie

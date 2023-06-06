@@ -1,15 +1,33 @@
+import type { Message, User } from "@prisma/client";
 import {
   useRevalidator,
   useRouteLoaderData,
   useSubmit,
 } from "@remix-run/react";
-import { useCallback, useEffect, useState } from "react";
+import {
+  Avatar,
+  Box,
+  CompositeZIndex,
+  Dropdown,
+  FixedZIndex,
+  Flex,
+  Icon,
+  IconButton,
+  Layer,
+  Sticky,
+  Text,
+  TextArea,
+  Toast,
+  Tooltip,
+} from "gestalt";
+import millify from "millify";
+import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { useEventSource } from "remix-utils";
+import SmallContainer from "../components/SmallContainer";
 import type { RootData } from "../root";
 
 export default function () {
   const [value, setValue] = useState("");
-  const [showToast, setShowToast] = useState(false);
 
   const submit = useSubmit();
   const loaderData = useRouteLoaderData("root") as RootData;
@@ -28,25 +46,17 @@ export default function () {
     submit(formData, { method: "POST", replace: true, action: "/" });
     clearValue();
   }, [submit, value]);
-
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText("https://chat8b.fly.dev");
-    setShowToast(true);
-    setTimeout(() => {
-      setShowToast(false);
-    }, 1000); // Hide the toast after 3 seconds
-  };
-
   const clearValue = () => {
     setValue("");
   };
 
-  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setValue(event.target.value);
-  };
+  const handleChange = useCallback(
+    ({ value }: { value: string }) => setValue(value),
+    []
+  );
 
   const handleKeyDown = useCallback(
-    (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    ({ event }: { event: React.KeyboardEvent<HTMLTextAreaElement> }) => {
       if (event.key === "Enter" && !event.shiftKey) {
         event.preventDefault();
         handleSubmit();
@@ -56,104 +66,305 @@ export default function () {
   );
 
   if (
-    !loaderData.user ||
     !loaderData.messages ||
-    !loaderData.onlineCount == null ||
-    loaderData.userCount == undefined ||
-    loaderData.userCount == null ||
-    loaderData.userCount == undefined
+    loaderData.messages == undefined ||
+    loaderData.messages.length === 0
   )
     return null;
 
   return (
-    <div className="mx-auto flex h-screen max-w-md flex-col bg-gray-100">
-      {/* Top bar */}
-      {showToast && (
-        <div className="fixed left-0 top-0 flex h-12 w-full items-center justify-center bg-gray-800 text-white">
-          <p>Link copied to clipboard!</p>
-        </div>
-      )}
-      <div className="flex items-center justify-between bg-gray-800 p-4 text-white">
-        <div>
-          <p className="text-lg font-bold">
-            {loaderData.userCount} of 8 billion users
-          </p>
-          <p className="text-sm">{loaderData.messageCount} chat interactions</p>
-
-          <div className="flex items-baseline justify-start gap-2 align-baseline">
-            <span className="inline-block h-2 w-2 rounded-full bg-green-500"></span>{" "}
-            <p className="text-sm">{loaderData.onlineCount} online</p>
-            <p className="text-xs text-gray-400"> ~60m ago</p>
-          </div>
-        </div>
-        <div className="flex items-center space-x-2">
-          <button
-            onClick={copyToClipboard}
-            className="rounded bg-blue-500 px-2 py-1 text-white hover:bg-blue-600"
-          >
-            Share
-          </button>
-          <a href="https://github.com/zifahm/chat8b">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5 text-gray-500"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-            >
-              <path
-                fillRule="evenodd"
-                d="M12 0C5.373 0 0 5.373 0 12c0 5.303 3.438 9.8 8.207 11.385.6.113.793-.26.793-.578l-.007-2.003c-3.338.725-4.033-1.276-4.033-1.276-.546-1.386-1.334-1.756-1.334-1.756-1.089-.745.084-.73.084-.73 1.206.085 1.841 1.236 1.841 1.236 1.07 1.835 2.807 1.305 3.49.997.108-.765.418-1.285.76-1.581-2.665-.301-5.466-1.331-5.466-5.93 0-1.31.468-2.38 1.236-3.22-.125-.302-.535-1.524.117-3.176 0 0 1.008-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.288-1.23 3.288-1.23.656 1.652.246 2.874.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.626-5.475 5.92.432.37.816 1.102.816 2.22l-.006 3.288c0 .32.192.694.8.576C20.565 21.795 24 17.3 24 12c0-6.627-5.373-12-12-12z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </a>
-        </div>
-      </div>
-      <div className="flex-grow overflow-auto p-4">
-        {/* Chat bubbles */}
-        <div className="max-h-100 mt-auto flex flex-col space-y-2 overflow-y-auto">
-          {/* Chat bubble */}
-          {loaderData.messages?.map((message) => (
-            <div
-              key={message.id}
-              className={`my-2 flex flex-col items-${
-                message.userId === loaderData.user?.id ? "end" : "start"
-              }`}
-            >
-              <span className="mb-1 text-xs text-gray-400">
-                {/* {message.userId !== loaderData.user.id && <>You- </>} */}
-                {message.user.name} {new Date(message.createdAt).getHours()}:{" "}
-                {new Date(message.createdAt).getMinutes()}{" "}
-              </span>
-              <div
-                className={`rounded-br-lg rounded-tl-lg bg-${
-                  message.userId === loaderData.user?.id ? "blue" : "green"
-                }-500 px-4 py-2 text-white`}
-              >
-                {message.message}
-              </div>
-            </div>
+    <SmallContainer>
+      <Header />
+      <Box marginTop={3}>
+        <Flex gap={6} direction="column">
+          <Flex gap={1} alignItems="center">
+            <Text color="subtle" size="100">
+              {loaderData.messageCount} chats
+            </Text>
+          </Flex>
+          {loaderData?.messages?.map((message) => (
+            <>
+              {message.userId === loaderData.user?.id ? (
+                <BubbleUser
+                  message={message}
+                  user={message.user}
+                  view={loaderData.chatViewCount ?? 0}
+                />
+              ) : (
+                <Bubble
+                  message={message}
+                  user={message.user}
+                  view={loaderData.chatViewCount ?? 0}
+                />
+              )}
+            </>
           ))}
-        </div>
-      </div>
-      {/* Textarea and send button */}
-      <div className="flex p-4">
-        <textarea
-          name="message"
-          className="mr-2 flex-grow rounded-lg border p-2"
-          placeholder="Type a message..."
-          value={value}
-          onChange={handleChange}
-          onKeyDown={handleKeyDown}
-        ></textarea>
-        <button
-          className="rounded-lg bg-blue-500 px-4 py-2 text-white"
-          type="button"
-          onClick={handleSubmit}
+          <Box />
+        </Flex>
+      </Box>
+
+      <Sticky bottom={0}>
+        <Box
+          display="flex"
+          justifyContent="between"
+          alignItems="center"
+          color="light"
+          padding={1}
         >
-          Send
-        </button>
-      </div>
-    </div>
+          <Flex.Item flex="grow">
+            <TextArea
+              id="text"
+              onChange={handleChange}
+              onKeyDown={handleKeyDown}
+              placeholder="Ask Chat-GPT questions or advice to humans"
+              rows={2}
+              value={value}
+            />
+          </Flex.Item>
+          <Box marginStart={1}>
+            <IconButton
+              icon="send"
+              size="lg"
+              accessibilityLabel="send"
+              onClick={handleSubmit}
+            />
+          </Box>
+        </Box>
+      </Sticky>
+    </SmallContainer>
   );
 }
+const PAGE_HEADER_ZINDEX = new FixedZIndex(10);
+const Header = () => {
+  const loaderData = useRouteLoaderData("root") as RootData;
+  const [showToast, setShowToast] = useState(false);
+  const [open, toggleOpen] = useReducer((s) => !s, false);
+  const anchorRef = useRef(null);
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(
+      "Hey, I'm inviting you to Chat-8B. You can ask Chat-GPT questions or advice to humans. I'm sharing this to so we chat with all 8 billion of us https://chat8b.fly.dev"
+    );
+    setShowToast(true);
+    setTimeout(() => {
+      setShowToast(false);
+    }, 1000); // Hide the toast after 3 seconds
+  };
+
+  return (
+    <Sticky top={0}>
+      {showToast && <BottomToast />}
+      <Box
+        display="flex"
+        justifyContent="between"
+        alignItems="center"
+        borderStyle="shadow"
+        color="light"
+        padding={2}
+        rounding={5}
+      >
+        <IconButton
+          accessibilityLabel="users"
+          icon="person-add"
+          size="md"
+          onClick={copyToClipboard}
+        />
+        <Box>
+          <Box display="flex" alignItems="center">
+            <Text weight="bold" size="500">
+              Chat-8B
+            </Text>
+            <Box marginStart={1}>
+              <Tooltip
+                zIndex={PAGE_HEADER_ZINDEX}
+                text="Ask Chat-GPT questions or adivice to humans. Share to reach all 8 billion of us."
+              >
+                <Icon icon="info-circle" accessibilityLabel="info" />
+              </Tooltip>
+            </Box>
+          </Box>
+          <Flex justifyContent="center" gap={1}>
+            <Box
+              color="successBase"
+              padding={1}
+              rounding="circle"
+              display="inlineBlock"
+            />
+            <Text inline size="100">
+              {millify(loaderData?.onlineCount ?? 0)} online
+            </Text>{" "}
+            <Text size="100" inline>
+              {millify(loaderData?.userCount ?? 0)} users
+            </Text>
+          </Flex>
+        </Box>
+        <IconButton
+          accessibilityLabel="more"
+          icon="ellipsis"
+          size="md"
+          ref={anchorRef}
+          onClick={toggleOpen}
+          selected={open}
+        />
+      </Box>
+      {open && (
+        <Dropdown
+          anchor={anchorRef.current}
+          id="more-dropdown"
+          onDismiss={toggleOpen}
+          zIndex={new CompositeZIndex([PAGE_HEADER_ZINDEX])}
+        >
+          <Dropdown.Link
+            option={{
+              value: "Follow Dev on Twitter",
+              label: "Folow Dev on Twitter",
+            }}
+            isExternal
+            href="https://twitter.com/zifahm1"
+          />
+
+          <Dropdown.Link
+            option={{
+              value: "See Chat-8B Codebase",
+              label: "Chat-8B Codebase",
+            }}
+            isExternal
+            href="https://github.com/zifahm/chat8b"
+          />
+        </Dropdown>
+      )}
+    </Sticky>
+  );
+};
+
+const Bubble = ({
+  user,
+  message,
+  view,
+}: {
+  user: User;
+  message: Message;
+  view: number;
+}) => {
+  return (
+    <Box display="flex" justifyContent="start" alignItems="end">
+      <Avatar name={user.name} size="sm" />
+      <Flex direction="column" gap={1}>
+        <Box display="flex" direction="column">
+          <Text size="100" color="subtle">
+            {user.name}
+          </Text>
+          <Box
+            color="lightWash"
+            borderStyle="none"
+            rounding={4}
+            padding={5}
+            marginBottom={1}
+            marginTop={1}
+          >
+            <Text>{message.message}</Text>
+          </Box>
+          <Box marginStart={1}>
+            <Flex justifyContent="end" gap={2} alignItems="center">
+              <Text size="100" color="subtle">
+                {new Date(message.createdAt).getHours()}:
+                {new Date(message.createdAt).getMinutes()}
+              </Text>
+              <Box>
+                <Icon
+                  icon="graph-bar"
+                  color="subtle"
+                  accessibilityLabel="view"
+                  inline
+                  size={10}
+                />{" "}
+                <Text size="100" color="subtle" inline>
+                  {millify(view)}
+                </Text>
+              </Box>
+            </Flex>
+          </Box>
+        </Box>
+      </Flex>
+    </Box>
+  );
+};
+
+const BubbleUser = ({
+  message,
+  view,
+  user,
+}: {
+  user: User;
+  message: Message;
+  view: number;
+}) => {
+  return (
+    <Box display="flex" justifyContent="end" alignItems="end">
+      <Flex direction="column" gap={1}>
+        <Box display="flex" direction="column">
+          <Flex justifyContent="end">
+            <Text size="100" color="subtle">
+              {user.name}
+            </Text>
+          </Flex>
+          <Box
+            color="light"
+            borderStyle="sm"
+            rounding={4}
+            padding={5}
+            marginBottom={1}
+            marginTop={1}
+          >
+            <Text>{message.message}</Text>
+          </Box>
+          <Flex justifyContent="start" gap={2} alignItems="center">
+            <Box>
+              <Text size="100" color="subtle" inline>
+                {millify(view)}
+              </Text>{" "}
+              <Icon
+                icon="graph-bar"
+                color="subtle"
+                accessibilityLabel="view"
+                inline
+                size={10}
+              />
+            </Box>
+            <Text size="100" color="subtle">
+              {new Date(message.createdAt).getHours()}:
+              {new Date(message.createdAt).getMinutes()}
+            </Text>
+          </Flex>
+        </Box>
+      </Flex>
+    </Box>
+  );
+};
+
+const BottomToast = () => {
+  return (
+    <Layer zIndex={{ index: () => 9999999 }}>
+      <Box
+        dangerouslySetInlineStyle={{
+          __style: {
+            bottom: 50,
+            left: "50%",
+            transform: "translateX(-50%)",
+          },
+        }}
+        width="100%"
+        paddingX={1}
+        position="fixed"
+        display="flex"
+        justifyContent="center"
+      >
+        <Toast
+          //@ts-ignore
+          type="success"
+          text={<Text inline>Copied invitaion to clipboard</Text>}
+        />
+      </Box>
+    </Layer>
+  );
+};

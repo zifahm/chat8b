@@ -20,9 +20,9 @@ export async function getUserCount(): Promise<number> {
   return prisma.user.count();
 }
 
-export async function currentOnline() {
+const viewCount = async (minutes: number) => {
   const fiveMinutesAgo = new Date();
-  fiveMinutesAgo.setMinutes(fiveMinutesAgo.getMinutes() - 60);
+  fiveMinutesAgo.setMinutes(fiveMinutesAgo.getMinutes() - minutes);
 
   const users = await prisma.user.count({
     where: {
@@ -36,4 +36,12 @@ export async function currentOnline() {
     },
   });
   return users;
+};
+
+export async function currentOnline() {
+  return viewCount(60);
+}
+
+export async function getChatViewCount() {
+  return viewCount(30);
 }

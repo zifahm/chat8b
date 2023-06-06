@@ -1,7 +1,7 @@
 <div align="center">
   <h1 align="center"><a href="https://chat8b.fly.dev">Chat-8B</a></h1>
   <strong align="center">
-  A conversation with 8 Billion people
+  Ask Chat-GPT questions or advice to humans. Share to reach all 8 billion of us.
   </strong>
   <p>
     This number has never been reached before, and considering the current rate at which humanity's population is declining.
@@ -11,7 +11,7 @@
 
 ## Support
 
-- 🆘 Join the
+- 🆘
   Join our Discord [CHAT-8B Community on Discord](https://discord.gg/BmecYDj84q).
 - 🐛 Open a [GitHub issue](https://github.com/zifahm/chat8b/issues) to
   report a bug.
