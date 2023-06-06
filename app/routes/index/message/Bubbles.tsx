@@ -1,5 +1,5 @@
 import type { Message, User } from "@prisma/client";
-import { Avatar, Box, Flex, Icon, Text } from "gestalt";
+import { Avatar, Box, Flex, Text } from "gestalt";
 import millify from "millify";
 
 export const Bubble = ({
@@ -35,7 +35,7 @@ export const Bubble = ({
                 {new Date(message.createdAt).getHours()}:
                 {new Date(message.createdAt).getMinutes()}
               </Text>
-              <Box>
+              {/* <Box>
                 <Icon
                   icon="graph-bar"
                   color="subtle"
@@ -46,7 +46,7 @@ export const Bubble = ({
                 <Text size="100" color="subtle" inline>
                   {millify(view)}
                 </Text>
-              </Box>
+              </Box> */}
             </Flex>
           </Box>
         </Box>
@@ -86,15 +86,15 @@ export const BubbleUser = ({
           <Flex justifyContent="start" gap={2} alignItems="center">
             <Box>
               <Text size="100" color="subtle" inline>
-                {millify(view)}
+                {millify(view)} views
               </Text>{" "}
-              <Icon
+              {/* <Icon
                 icon="graph-bar"
                 color="subtle"
                 accessibilityLabel="view"
                 inline
                 size={10}
-              />
+              /> */}
             </Box>
             <Text size="100" color="subtle">
               {new Date(message.createdAt).getHours()}:
