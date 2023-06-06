@@ -1,4 +1,3 @@
-import { cssBundleHref } from "@remix-run/css-bundle";
 import type {
   ActionArgs,
   LinksFunction,
@@ -38,7 +37,6 @@ import {
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: gestaltStyle },
-  ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
 ];
 
 const DEFAULT_MARKETING_IMAGE =
