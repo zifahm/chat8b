@@ -33,7 +33,7 @@ export const links: LinksFunction = () => [
 ];
 
 const DEFAULT_MARKETING_IMAGE =
-  "https://res.cloudinary.com/bespoke-cloudinary/image/upload/v1685976527/Group_8_jfkrbh.png";
+  "https://res.cloudinary.com/bespoke-cloudinary/image/upload/v1685976527/Group_8_jfkrbh.jpg";
 const description = "A conversation with 8 Billion people";
 
 export const meta: V2_MetaFunction = () => {
@@ -52,10 +52,10 @@ export const meta: V2_MetaFunction = () => {
       "og:image:secure_url": DEFAULT_MARKETING_IMAGE,
     },
     {
-      "og:image:width": 1600,
+      "og:image:width": "1600",
     },
     {
-      "og:image:height": 900,
+      "og:image:height": "900",
     },
     {
       "twitter:card": "summary",
