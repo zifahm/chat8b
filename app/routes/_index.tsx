@@ -1,9 +1,16 @@
-import { Form, useRevalidator, useRouteLoaderData } from "@remix-run/react";
-import { useEffect, useState } from "react";
+import {
+  useFetcher,
+  useRevalidator,
+  useRouteLoaderData,
+  useSubmit,
+} from "@remix-run/react";
+import { useCallback, useEffect, useState } from "react";
 import { useEventSource } from "remix-utils";
 import type { RootData } from "../root";
 
 export default function () {
+  const fetcher = useFetcher();
+  const submit = useSubmit();
   const loaderData = useRouteLoaderData("root") as RootData;
   const revalidator = useRevalidator();
   let lastMessageId = useEventSource("/message", {
@@ -24,6 +31,37 @@ export default function () {
     }, 1000); // Hide the toast after 3 seconds
   };
 
+  const clearValue = () => {
+    setValue("");
+  };
+
+  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setValue(event.target.value);
+  };
+
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+      if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault();
+        const formData = new FormData();
+        formData.append("message", value);
+        submit(formData, { method: "POST", replace: true, action: "/" });
+        clearValue();
+      }
+    },
+    [submit, value]
+  );
+
+  if (
+    !loaderData.user ||
+    !loaderData.messages ||
+    !loaderData.onlineCount == null ||
+    loaderData.userCount == undefined ||
+    loaderData.userCount == null ||
+    loaderData.userCount == undefined
+  )
+    return null;
+
   return (
     <div className="mx-auto flex h-screen max-w-md flex-col bg-gray-100">
       {/* Top bar */}
@@ -35,10 +73,10 @@ export default function () {
       <div className="flex items-center justify-between bg-gray-800 p-4 text-white">
         <div>
           <p className="text-lg font-bold">
-            {loaderData?.userCount} of 8 billion users
+            {loaderData.userCount} of 8 billion users
           </p>
           <p className="text-sm">
-            {loaderData?.onlineCount} online
+            {loaderData.onlineCount} online
             <span className="ml-2 inline-block h-2 w-2 rounded-full bg-green-500"></span>
           </p>
         </div>
@@ -69,7 +107,7 @@ export default function () {
         {/* Chat bubbles */}
         <div className="max-h-100 mt-auto flex flex-col space-y-2 overflow-y-auto">
           {/* Chat bubble */}
-          {loaderData?.messages?.map((message) => (
+          {loaderData.messages?.map((message) => (
             <div
               key={message.id}
               className={`my-2 flex flex-col items-${
@@ -93,16 +131,15 @@ export default function () {
         </div>
       </div>
       {/* Textarea and send button */}
-      <Form action="/" method="post">
+      <fetcher.Form action="/" method="post" id="my-form" onSubmit={clearValue}>
         <div className="flex p-4">
           <textarea
             name="message"
             className="mr-2 flex-grow rounded-lg border p-2"
             placeholder="Type a message..."
             value={value}
-            onChange={(event) => {
-              setValue(event.target.value);
-            }}
+            onChange={handleChange}
+            onKeyDown={handleKeyDown}
           ></textarea>
           <button
             className="rounded-lg bg-blue-500 px-4 py-2 text-white"
@@ -111,7 +148,7 @@ export default function () {
             Send
           </button>
         </div>
-      </Form>
+      </fetcher.Form>
     </div>
   );
 }

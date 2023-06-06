@@ -16,6 +16,7 @@ import {
 } from "@remix-run/react";
 
 import isbot from "isbot";
+import { promiseHash } from "remix-utils";
 import stylesheet from "~/tailwind.css";
 import type { Message } from "./models/message.server";
 import { createMessage, getLatestMessages } from "./models/message.server";
@@ -83,30 +84,28 @@ export const loader = async ({ request }: LoaderArgs) => {
   if (bot) return json<RootData>({});
 
   const user = await getUser(request);
-  let header = null;
+  let setcookie = null;
   if (!user) {
     const user = await createUser();
-    header = await createUserSessionCookieHeader({
+    setcookie = await createUserSessionCookieHeader({
       request,
       userId: user.id,
     });
   }
-  const data = await Promise.all([
-    await getLatestMessages(),
-    await getUserCount(),
-    await currentOnline(),
-  ]);
+
   return json<RootData>(
     {
       user,
-      messages: data[0],
-      userCount: data[1],
-      onlineCount: data[2],
+      ...(await promiseHash({
+        messages: getLatestMessages(),
+        userCount: getUserCount(),
+        onlineCount: currentOnline(),
+      })),
     },
-    header
+    setcookie
       ? {
           headers: {
-            "Set-Cookie": header,
+            "Set-Cookie": setcookie,
           },
         }
       : undefined
