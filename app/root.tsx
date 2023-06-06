@@ -15,6 +15,7 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 
+import isbot from "isbot";
 import stylesheet from "~/tailwind.css";
 import type { Message } from "./models/message.server";
 import { createMessage, getLatestMessages } from "./models/message.server";
@@ -78,6 +79,9 @@ export interface RootData {
 }
 
 export const loader = async ({ request }: LoaderArgs) => {
+  const bot = isbot(request.headers.get("user-agent"));
+  if (bot) return json(null);
+
   const user = await getUser(request);
   let header = null;
   if (!user) {
