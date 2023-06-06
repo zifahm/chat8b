@@ -13,7 +13,6 @@ import {
   Toast,
   Tooltip,
 } from "gestalt";
-import millify from "millify";
 import { useReducer, useRef, useState } from "react";
 import type { RootData } from "../../root";
 const PAGE_HEADER_ZINDEX = new FixedZIndex(10);
@@ -74,10 +73,10 @@ export const Header = () => {
               display="inlineBlock"
             />
             <Text inline size="100">
-              {millify(loaderData?.onlineCount ?? 0)} online
+              {loaderData?.onlineCount ?? 0} online
             </Text>{" "}
             <Text size="100" inline>
-              {millify(loaderData?.userCount ?? 0)} users
+              {loaderData?.userCount ?? 0} users
             </Text>
           </Flex>
         </Box>
@@ -97,19 +96,19 @@ export const Header = () => {
           onDismiss={toggleOpen}
           zIndex={new CompositeZIndex([PAGE_HEADER_ZINDEX])}
         >
-          <Dropdown.Link
+          {/* <Dropdown.Link
             option={{
               value: "Follow Dev on Twitter",
               label: "Folow Dev on Twitter",
             }}
             isExternal
             href="https://twitter.com/zifahm1"
-          />
+          /> */}
 
           <Dropdown.Link
             option={{
               value: "See Chat-8B Codebase",
-              label: "Chat-8B Codebase",
+              label: "Open Source Chat-8B",
             }}
             isExternal
             href="https://github.com/zifahm/chat8b"
