@@ -1,5 +1,4 @@
 import {
-  useFetcher,
   useRevalidator,
   useRouteLoaderData,
   useSubmit,
@@ -9,19 +8,26 @@ import { useEventSource } from "remix-utils";
 import type { RootData } from "../root";
 
 export default function () {
-  const fetcher = useFetcher();
+  const [value, setValue] = useState("");
+  const [showToast, setShowToast] = useState(false);
+
   const submit = useSubmit();
   const loaderData = useRouteLoaderData("root") as RootData;
   const revalidator = useRevalidator();
+
   let lastMessageId = useEventSource("/message", {
     event: "new-message",
   });
 
   useEffect(() => revalidator.revalidate(), [lastMessageId]);
 
-  const [value, setValue] = useState("");
-
-  const [showToast, setShowToast] = useState(false);
+  const handleSubmit = useCallback(() => {
+    if (value === "") return;
+    const formData = new FormData();
+    formData.append("message", value);
+    submit(formData, { method: "POST", replace: true, action: "/" });
+    clearValue();
+  }, [submit, value]);
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText("https://chat8b.fly.dev");
@@ -43,13 +49,10 @@ export default function () {
     (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
       if (event.key === "Enter" && !event.shiftKey) {
         event.preventDefault();
-        const formData = new FormData();
-        formData.append("message", value);
-        submit(formData, { method: "POST", replace: true, action: "/" });
-        clearValue();
+        handleSubmit();
       }
     },
-    [submit, value]
+    [handleSubmit]
   );
 
   if (
@@ -131,24 +134,23 @@ export default function () {
         </div>
       </div>
       {/* Textarea and send button */}
-      <fetcher.Form action="/" method="post" id="my-form" onSubmit={clearValue}>
-        <div className="flex p-4">
-          <textarea
-            name="message"
-            className="mr-2 flex-grow rounded-lg border p-2"
-            placeholder="Type a message..."
-            value={value}
-            onChange={handleChange}
-            onKeyDown={handleKeyDown}
-          ></textarea>
-          <button
-            className="rounded-lg bg-blue-500 px-4 py-2 text-white"
-            type="submit"
-          >
-            Send
-          </button>
-        </div>
-      </fetcher.Form>
+      <div className="flex p-4">
+        <textarea
+          name="message"
+          className="mr-2 flex-grow rounded-lg border p-2"
+          placeholder="Type a message..."
+          value={value}
+          onChange={handleChange}
+          onKeyDown={handleKeyDown}
+        ></textarea>
+        <button
+          className="rounded-lg bg-blue-500 px-4 py-2 text-white"
+          type="button"
+          onClick={handleSubmit}
+        >
+          Send
+        </button>
+      </div>
     </div>
   );
 }
