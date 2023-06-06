@@ -79,10 +79,12 @@ export default function () {
             {loaderData.userCount} of 8 billion users
           </p>
           <p className="text-sm">{loaderData.messageCount} chat interactions</p>
-          <p className="text-sm">
-            {loaderData.onlineCount} online
-            <span className="ml-2 inline-block h-2 w-2 rounded-full bg-green-500"></span>
-          </p>
+
+          <div className="flex items-baseline justify-start gap-2 align-baseline">
+            <span className="inline-block h-2 w-2 rounded-full bg-green-500"></span>{" "}
+            <p className="text-sm">{loaderData.onlineCount} online</p>
+            <p className="text-xs text-gray-400"> ~60m ago</p>
+          </div>
         </div>
         <div className="flex items-center space-x-2">
           <button
