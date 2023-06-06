@@ -1,7 +1,7 @@
 <div align="center">
   <h1 align="center"><a href="https://chat8b.fly.dev">Chat-8B</a></h1>
   <strong align="center">
-  Ask Chat-GPT questions or advice to humans. Share to reach all 8 billion of us.
+  A single chat room for all 8 billion humans. Share and invite your significant other.
   </strong>
   <p>
     This number has never been reached before, and considering the current rate at which humanity's population is declining.

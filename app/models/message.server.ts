@@ -21,7 +21,7 @@ export async function createMessage(
 
 export async function getLatestMessages() {
   return await prisma.message.findMany({
-    take: 1000,
+    take: 500,
     select: {
       userId: true,
       id: true,

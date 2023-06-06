@@ -74,7 +74,7 @@ export const BubbleUser = ({
             </Text>
           </Flex>
           <Box
-            color="light"
+            color="dark"
             borderStyle="sm"
             rounding={4}
             padding={5}

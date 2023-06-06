@@ -15,6 +15,7 @@ import {
 } from "@remix-run/react";
 import gestaltStyle from "gestalt/dist/gestalt.css";
 
+import { ColorSchemeProvider } from "gestalt";
 import isbot from "isbot";
 import { promiseHash } from "remix-utils";
 import type { Message } from "./models/message.server";
@@ -41,8 +42,7 @@ export const links: LinksFunction = () => [
 
 const DEFAULT_MARKETING_IMAGE =
   "https://res.cloudinary.com/bespoke-cloudinary/image/upload/f_auto/v1686076084/Group_8_1_xvs0ko.jpg";
-const description =
-  "Ask Chat-GPT questions or advice to humans. Share to reach all 8 billion of us.";
+const description = "A single chat room for all 8 billion humans.";
 
 export const meta: V2_MetaFunction = () => {
   return [
@@ -152,8 +152,10 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body className="h-full">
-        <Outlet />
+      <body className="h-full" style={{ backgroundColor: "black" }}>
+        <ColorSchemeProvider colorScheme="dark">
+          <Outlet />
+        </ColorSchemeProvider>
         <ScrollRestoration />
         <Scripts />
         <LiveReload />

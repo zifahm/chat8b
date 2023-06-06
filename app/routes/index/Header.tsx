@@ -25,7 +25,7 @@ export const Header = () => {
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(
-      "Hey, I'm inviting you to Chat-8B. You can ask Chat-GPT questions or advice to humans. I'm sharing this to so we chat with all 8 billion of us https://chat8b.fly.dev"
+      "Hey, I'm inviting you to Chat-8B. This is a single chat room for all 8 billion humans. They say you can get any answer with whoever is online https://chat8b.online"
     );
     setShowToast(true);
     setTimeout(() => {
@@ -41,7 +41,7 @@ export const Header = () => {
         justifyContent="between"
         alignItems="center"
         borderStyle="shadow"
-        color="light"
+        color="dark"
         padding={2}
         rounding={5}
       >
@@ -59,7 +59,7 @@ export const Header = () => {
             <Box marginStart={1}>
               <Tooltip
                 zIndex={PAGE_HEADER_ZINDEX}
-                text="Ask Chat-GPT questions or adivice to humans. Share to reach all 8 billion of us."
+                text="A Single chat room for all 8 billion humans. If you have any questions or if you need any advice, ask here. Tap the person add icon, so can share with your friends. Maybe we might chat with all 8 billion of humans."
               >
                 <Icon icon="info-circle" accessibilityLabel="info" />
               </Tooltip>
@@ -76,7 +76,7 @@ export const Header = () => {
               {loaderData?.onlineCount ?? 0} online
             </Text>{" "}
             <Text size="100" inline>
-              {loaderData?.userCount ?? 0} users
+              {loaderData?.userCount ?? 0} humans
             </Text>
           </Flex>
         </Box>

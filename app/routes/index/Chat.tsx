@@ -38,7 +38,8 @@ export default function Chat() {
         display="flex"
         justifyContent="between"
         alignItems="center"
-        color="light"
+        color="dark"
+        rounding={3}
         padding={1}
       >
         <Flex.Item flex="grow">
@@ -46,7 +47,7 @@ export default function Chat() {
             id="text"
             onChange={handleChange}
             onKeyDown={handleKeyDown}
-            placeholder="Ask Chat-GPT questions or advice to humans"
+            placeholder="Is there something troubling you?"
             rows={2}
             value={value}
           />
