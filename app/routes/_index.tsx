@@ -35,10 +35,10 @@ export default function () {
       <div className="flex items-center justify-between bg-gray-800 p-4 text-white">
         <div>
           <p className="text-lg font-bold">
-            {loaderData.userCount} of 8 billion users
+            {loaderData?.userCount} of 8 billion users
           </p>
           <p className="text-sm">
-            {loaderData.onlineCount} online
+            {loaderData?.onlineCount} online
             <span className="ml-2 inline-block h-2 w-2 rounded-full bg-green-500"></span>
           </p>
         </div>
@@ -73,7 +73,7 @@ export default function () {
             <div
               key={message.id}
               className={`my-2 flex flex-col items-${
-                message.userId === loaderData.user.id ? "end" : "start"
+                message.userId === loaderData.user?.id ? "end" : "start"
               }`}
             >
               <span className="mb-1 text-xs text-gray-400">
@@ -83,7 +83,7 @@ export default function () {
               </span>
               <div
                 className={`rounded-br-lg rounded-tl-lg bg-${
-                  message.userId === loaderData.user.id ? "blue" : "green"
+                  message.userId === loaderData.user?.id ? "blue" : "green"
                 }-500 px-4 py-2 text-white`}
               >
                 {message.message}

@@ -72,15 +72,15 @@ export const meta: V2_MetaFunction = () => {
 };
 
 export interface RootData {
-  user: User;
-  messages: (Message & { user: User })[];
-  userCount: number;
-  onlineCount: number;
+  user?: User | null | undefined;
+  messages?: (Message & { user: User })[] | null | undefined;
+  userCount?: number | null | undefined;
+  onlineCount?: number | null | undefined;
 }
 
 export const loader = async ({ request }: LoaderArgs) => {
   const bot = isbot(request.headers.get("user-agent"));
-  if (bot) return json(null);
+  if (bot) return json<RootData>({});
 
   const user = await getUser(request);
   let header = null;
@@ -91,13 +91,17 @@ export const loader = async ({ request }: LoaderArgs) => {
       userId: user.id,
     });
   }
-  const messages = await getLatestMessages();
-  return json(
+  const data = await Promise.all([
+    await getLatestMessages(),
+    await getUserCount(),
+    await currentOnline(),
+  ]);
+  return json<RootData>(
     {
       user,
-      messages,
-      userCount: await getUserCount(),
-      onlineCount: await currentOnline(),
+      messages: data[0],
+      userCount: data[1],
+      onlineCount: data[2],
     },
     header
       ? {
