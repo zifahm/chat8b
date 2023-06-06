@@ -40,34 +40,42 @@ export const meta: V2_MetaFunction = () => {
   return [
     { title: `Chat-8B | ${description}` },
     { description },
-    { "og:url": "https://chat8b.fly.dev" },
-    { "og:title": "Chat-8B" },
-    { "og:site_name": "Chat-8B" },
-    { "og:type": "website" },
-    { "og:description": description },
+    { property: "og:url", content: "https://chat8b.fly.dev" },
+    { property: "og:title", content: "Chat-8B" },
+    { property: "og:site_name", content: "Chat-8B" },
+    { property: "og:type", content: "website" },
+    { property: "og:description", content: description },
     {
-      "og:image": DEFAULT_MARKETING_IMAGE,
+      property: "og:image",
+      content: DEFAULT_MARKETING_IMAGE,
     },
     {
-      "og:image:secure_url": DEFAULT_MARKETING_IMAGE,
+      property: "og:image:secure_url",
+      content: DEFAULT_MARKETING_IMAGE,
     },
     {
-      "og:image:width": "1600",
+      property: "og:image:width",
+      content: "1600",
     },
     {
-      "og:image:height": "900",
+      property: "og:image:height",
+      content: "900",
     },
     {
-      "twitter:card": "summary",
+      property: "twitter:card",
+      content: "summary",
     },
     {
-      "twitter:title": "Chat-8B",
+      property: "twitter:title",
+      content: "Chat-8B",
     },
     {
-      "twitter:image": DEFAULT_MARKETING_IMAGE,
+      property: "twitter:image",
+      content: DEFAULT_MARKETING_IMAGE,
     },
     {
-      "twitter:description": description,
+      property: "twitter:description",
+      content: description,
     },
   ];
 };
