@@ -34,3 +34,7 @@ export async function getLatestMessages() {
     },
   });
 }
+
+export async function getMessageCount() {
+  return await prisma.message.count();
+}

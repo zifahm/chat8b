@@ -78,6 +78,7 @@ export default function () {
           <p className="text-lg font-bold">
             {loaderData.userCount} of 8 billion users
           </p>
+          <p className="text-sm">{loaderData.messageCount} chat interactions</p>
           <p className="text-sm">
             {loaderData.onlineCount} online
             <span className="ml-2 inline-block h-2 w-2 rounded-full bg-green-500"></span>

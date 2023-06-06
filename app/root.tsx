@@ -19,7 +19,11 @@ import isbot from "isbot";
 import { promiseHash } from "remix-utils";
 import stylesheet from "~/tailwind.css";
 import type { Message } from "./models/message.server";
-import { createMessage, getLatestMessages } from "./models/message.server";
+import {
+  createMessage,
+  getLatestMessages,
+  getMessageCount,
+} from "./models/message.server";
 import type { User } from "./models/user.server";
 import { createUser, currentOnline, getUserCount } from "./models/user.server";
 import {
@@ -85,6 +89,7 @@ export interface RootData {
   messages?: (Message & { user: User })[] | null | undefined;
   userCount?: number | null | undefined;
   onlineCount?: number | null | undefined;
+  messageCount?: number | null | undefined;
 }
 
 export const loader = async ({ request }: LoaderArgs) => {
@@ -108,6 +113,7 @@ export const loader = async ({ request }: LoaderArgs) => {
         messages: getLatestMessages(),
         userCount: getUserCount(),
         onlineCount: currentOnline(),
+        messageCount: getMessageCount(),
       })),
     },
     setcookie
