@@ -21,7 +21,14 @@ import {
   Tooltip,
 } from "gestalt";
 import millify from "millify";
-import { useCallback, useEffect, useReducer, useRef, useState } from "react";
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useReducer,
+  useRef,
+  useState,
+} from "react";
 import { useEventSource } from "remix-utils";
 import SmallContainer from "../components/SmallContainer";
 import type { RootData } from "../root";
@@ -83,7 +90,7 @@ export default function () {
             </Text>
           </Flex>
           {loaderData?.messages?.map((message) => (
-            <>
+            <Fragment key={message.id}>
               {message.userId === loaderData.user?.id ? (
                 <BubbleUser
                   message={message}
@@ -97,7 +104,7 @@ export default function () {
                   view={loaderData.chatViewCount ?? 0}
                 />
               )}
-            </>
+            </Fragment>
           ))}
           <Box />
         </Flex>
