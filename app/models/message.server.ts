@@ -1,6 +1,6 @@
 import type { Message, User } from "@prisma/client";
 import { prisma } from "../db.server";
-
+import { emitter } from "../services/emitter.server";
 export type { Message } from "@prisma/client";
 
 export async function createMessage(
@@ -13,6 +13,9 @@ export async function createMessage(
       userId,
     },
   });
+  if (newMessage) {
+    emitter.emit("message", newMessage);
+  }
   return newMessage;
 }
 

@@ -69,7 +69,7 @@ export default function () {
         {/* Chat bubbles */}
         <div className="max-h-100 mt-auto flex flex-col space-y-2 overflow-y-auto">
           {/* Chat bubble */}
-          {loaderData.messages.map((message) => (
+          {loaderData?.messages?.map((message) => (
             <div
               key={message.id}
               className={`my-2 flex flex-col items-${
