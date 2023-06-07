@@ -59,7 +59,7 @@ export const Header = () => {
             <Box marginStart={1}>
               <Tooltip
                 zIndex={PAGE_HEADER_ZINDEX}
-                text="A Single chat room for all 8 billion humans. If you have any questions or if you need any advice, ask here. Tap the person add icon, so can share with your friends. Maybe we might chat with all 8 billion of humans."
+                text="A Single chat room for all 8 billion humans. If you have any questions or if you need any advice, ask here. Tap the person add icon, so can share with your friends. Maybe we might chat with all 8 billion humans."
               >
                 <Icon icon="info-circle" accessibilityLabel="info" />
               </Tooltip>
@@ -76,7 +76,7 @@ export const Header = () => {
               {loaderData?.onlineCount ?? 0} online
             </Text>{" "}
             <Text size="100" inline>
-              {loaderData?.userCount ?? 0} humans
+              {loaderData?.userCount ?? 0} users
             </Text>
           </Flex>
         </Box>
