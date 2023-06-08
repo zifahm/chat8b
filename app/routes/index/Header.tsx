@@ -139,7 +139,7 @@ const BottomToast = () => {
         <Toast
           //@ts-ignore
           type="success"
-          text={<Text inline>Copied invitaion to clipboard</Text>}
+          text={<Text inline>Copied invitation to clipboard</Text>}
         />
       </Box>
     </Layer>

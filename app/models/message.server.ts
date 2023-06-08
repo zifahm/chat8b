@@ -21,7 +21,7 @@ export async function createMessage(
 
 export async function getLatestMessages() {
   return await prisma.message.findMany({
-    take: 500,
+    take: 250,
     select: {
       userId: true,
       id: true,
@@ -30,7 +30,7 @@ export async function getLatestMessages() {
       user: true,
     },
     orderBy: {
-      createdAt: "desc",
+      createdAt: "asc",
     },
   });
 }

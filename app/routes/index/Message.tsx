@@ -1,5 +1,5 @@
 import { useRevalidator, useRouteLoaderData } from "@remix-run/react";
-import { Box, Flex, Text } from "gestalt";
+import { Box, Flex } from "gestalt";
 import { Fragment, useEffect, useMemo } from "react";
 import { useEventSource } from "remix-utils";
 import type { RootData } from "../../root";
@@ -40,12 +40,9 @@ export default function Message() {
   return (
     <Box marginTop={3}>
       <Flex gap={6} direction="column">
-        <Flex gap={1} alignItems="center">
-          <Text color="subtle" size="100">
-            {loaderData.messageCount} chats
-          </Text>
-        </Flex>
+        <Box />
         {chat}
+        <Box />
         <Box />
       </Flex>
     </Box>
