@@ -27,7 +27,9 @@ export const Bubble = ({
             marginBottom={1}
             marginTop={1}
           >
-            <Text>{message.message}</Text>
+            <Text overflow="breakWord" lineClamp={20}>
+              {message.message}
+            </Text>
           </Box>
           <Box marginStart={1}>
             <Flex justifyContent="end" gap={2} alignItems="center">
@@ -81,7 +83,9 @@ export const BubbleUser = ({
             marginBottom={1}
             marginTop={1}
           >
-            <Text>{message.message}</Text>
+            <Text lineClamp={20} overflow="breakWord">
+              {message.message}
+            </Text>
           </Box>
           <Flex justifyContent="start" gap={2} alignItems="center">
             <Box>
