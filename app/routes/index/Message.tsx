@@ -39,7 +39,7 @@ export default function Message() {
 
   return (
     <Box marginTop={3}>
-      <Flex wrap gap={6} direction="column">
+      <Flex gap={6} direction="column">
         <Flex gap={1} alignItems="center">
           <Text color="subtle" size="100">
             {loaderData.messageCount} chats
